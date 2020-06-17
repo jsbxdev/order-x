@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
     class="app-bar"
-    color="transparent"
+    outlined
     elevation="0"
     app
     clipped-left
