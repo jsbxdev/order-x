@@ -1,32 +1,14 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-text-field
-            v-model="organization.name"
-            label="Nome do Negócio"
-            :rules="nameRules"
-            autocomplete="organizationName"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" class="d-flex">
-          <v-spacer></v-spacer>
-          <v-btn color="success" @click="create">Criar Organização</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+  <v-card outlined>
+    <organization-form is-empty></organization-form>
+  </v-card>
 </template>
 
 <script>
+import OrganizationForm from '~/components/OrganizationForm.vue'
 export default {
-  data() {
-    return {
-      organization: {},
-      valid: false,
-      nameRules: [(v) => !!v || 'Name is required']
-    }
+  components: {
+    OrganizationForm
   },
   computed: {
     user() {
@@ -39,15 +21,8 @@ export default {
       deep: true,
       handler(organizationId) {
         if (organizationId) {
-          console.log('redirecting...')
+          this.$router.push({ name: 'index' })
         }
-      }
-    }
-  },
-  methods: {
-    create() {
-      if (this.$refs.form.validate()) {
-        this.$store.dispatch('organization/create', this.organization)
       }
     }
   }
