@@ -5,7 +5,6 @@
     <navigation-drawer></navigation-drawer>
     <v-main>
       <v-container>
-        <p class="caption">{{ user }}</p>
         <nuxt />
       </v-container>
     </v-main>
@@ -37,6 +36,9 @@ export default {
     },
     user() {
       return this.$store.getters['auth/getUser']
+    },
+    organization() {
+      return this.$store.getters['organization/getOrganization']
     }
   },
   watch: {
@@ -54,21 +56,15 @@ export default {
     organization: {
       immediate: true,
       handler(organization) {
-        if (organization) {
-          // persist organization data on localStorage
-          localStorage('organization', organization)
-        }
+        // persist organization data on localStorage
+        this.$store.dispatch('organization/setLocalStorage', organization)
       }
     },
     user: {
       immediate: true,
       handler(user) {
-        if (user) {
-          console.log('userdata: ', user)
-          console.log('organizationId: ', user.organizationId)
-          // persist user data on localStorage
-          localStorage('user', user)
-        }
+        // persist user data on localStorage
+        this.$store.dispatch('auth/setLocalStorage', user)
       }
     },
     'user.organizationId': {
