@@ -1,3 +1,4 @@
+import localStorage from 'store2'
 import { firestoreAction } from 'vuexfire'
 
 export const state = () => ({
@@ -9,15 +10,23 @@ export const getters = {
   getOrganizationId: (state) => state.organization?.id
 }
 
-export const mutations = {}
+export const mutations = {
+  SET_ORGANIZATION: (state, user = false) => (state.user = user)
+}
 
 export const actions = {
   bindOrganization: firestoreAction(async (context, organizationId) => {
     if (organizationId) {
       const { organizationsRef } = await import('~/firestore')
-      context.bindFirestoreRef('user', organizationsRef.doc(organizationId))
+      context.bindFirestoreRef(
+        'organization',
+        organizationsRef.doc(organizationId)
+      )
     }
   }),
+  bindOrganizationFromLocalStorage: ({ commit }) => {
+    commit('SET_ORGANIZATION', localStorage('organization') || false)
+  },
   create: async (context, organization) => {
     const userId = context.rootGetters['auth/getUserId']
     if (userId) {
@@ -33,5 +42,11 @@ export const actions = {
           )
         })
     }
+  },
+  setLocalStorage: (getters, organization = false) => {
+    localStorage(
+      'organization',
+      organization?.id ? { ...organization, id: organization.id } : false
+    )
   }
 }
