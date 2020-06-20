@@ -15,14 +15,17 @@ export const mutations = {
 }
 
 export const actions = {
-  bindOrganization: firestoreAction(async (context, organizationId) => {
-    if (organizationId) {
-      const { organizationsRef } = await import('~/firestore')
-      context.bindFirestoreRef(
-        'organization',
-        organizationsRef.doc(organizationId)
-      )
+  bindOrganization: firestoreAction(
+    async ({ bindFirestoreRef }, organizationId) => {
+      if (organizationId) {
+        const { organizationsRef } = await import('~/firestore')
+        bindFirestoreRef('organization', organizationsRef.doc(organizationId))
+      }
     }
+  ),
+  unbindOrganization: firestoreAction(({ dispatch, unbindFirestoreRef }) => {
+    unbindFirestoreRef('organization')
+    dispatch('setLocalStorage')
   }),
   bindOrganizationFromLocalStorage: ({ commit }) => {
     commit('SET_ORGANIZATION', localStorage('organization') || false)
@@ -48,5 +51,14 @@ export const actions = {
       'organization',
       organization?.id ? { ...organization, id: organization.id } : false
     )
+  },
+  inviteUser: async ({ getters }, userId) => {
+    if (userId) {
+      const organizationId = getters.getOrganizationId
+      const { organizationsRef, FieldValue } = await import('~/firestore')
+      organizationsRef.doc(organizationId).update({
+        invitedUserIds: FieldValue.arrayUnion(userId)
+      })
+    }
   }
 }
