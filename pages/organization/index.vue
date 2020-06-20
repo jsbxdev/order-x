@@ -15,6 +15,7 @@
         <v-container>
           <search-user></search-user>
           <v-subheader>Usuários Ativos</v-subheader>
+          <user-list :users="users"></user-list>
         </v-container>
       </v-card>
     </v-col>
@@ -24,10 +25,12 @@
 <script>
 import OrganizationForm from '~/components/OrganizationForm.vue'
 import SearchUser from '~/components/SearchUser.vue'
+import UserList from '~/components/UserList.vue'
 export default {
   components: {
     OrganizationForm,
-    SearchUser
+    SearchUser,
+    UserList
   },
   data() {
     return {
@@ -38,6 +41,14 @@ export default {
   computed: {
     organization() {
       return this.$store.getters['organization/getOrganization']
+    },
+    users() {
+      return this.organization.users
+        ? Object.keys(this.organization.users).map((userId) => ({
+            ...this.organization.users[userId],
+            id: userId
+          }))
+        : []
     }
   },
   watch: {
