@@ -1,12 +1,18 @@
 import localStorage from 'store2'
 
 export default async function({ redirect, route, store }) {
-  // eslint-disable-next-line
-  console.warn('Middlware says: ', route)
+  // debug route
+  if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line
+    console.warn('Middlware says: ', route)
+  }
+
+  // set first page
   if (!store.getters['util/getFirstPage']) {
     store.commit('util/SET_FIRST_PAGE', route.name)
   }
 
+  // verify auth
   if (!localStorage('user')) {
     const { auth } = await import('~/auth')
     auth.onAuthStateChanged(function(authUser) {
