@@ -73,5 +73,18 @@ export const actions = {
         auth.signInWithRedirect(facebookAuthProvider)
       }
     } catch {}
+  },
+  signOut: async (context) => {},
+  acceptInvite: async ({ getters }, organizationId) => {
+    const { usersRef, organizationsRef, FieldValue } = await import(
+      '~/firestore'
+    )
+    const userId = getters.getUserId
+    usersRef.doc(userId).set({ organizationId }, { merge: true })
+    await organizationsRef.doc(organizationId).update({
+      invitedUserIds: FieldValue.arrayRemove(userId),
+      [`users.${userId}.hasAccepted`]: true
+    })
+    return true
   }
 }
