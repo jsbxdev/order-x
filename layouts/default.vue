@@ -73,6 +73,10 @@ export default {
       handler(organizationId) {
         if (organizationId) {
           this.$store.dispatch('organization/bindOrganization', organizationId)
+          this.$store.dispatch('items/bindItems', organizationId)
+          this.$store.dispatch('categories/bindCategories', organizationId)
+        } else {
+          this.$store.dispatch('organization/unbindOrganization')
         }
       }
     }
