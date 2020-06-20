@@ -21,5 +21,8 @@ firebase
 
 // Firestore
 export const database = firebase.firestore()
+export const FieldValue = firebase.firestore.FieldValue
+
+// Collections
 export const organizationsRef = database.collection('organizations')
 export const usersRef = database.collection('users')
